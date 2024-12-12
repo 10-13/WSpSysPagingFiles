@@ -8,9 +8,9 @@
 
 char szPagingFileShareName[] = "{11FB95B0-4300-49fb-BE12-B086FD00D7B8}";//"$$UniquePagingFileShareName$$";
 //"{11FB95B0-4300-49fb-BE12-B086FD00D7B8}"
-char szEventCharName[] = "{D244D5E4-4640-4186-BCC2-701BDE8E26DC}";//"$$UniqueEventCharName$$";
+char szSemCharName[] = "{D244D5E4-4640-4186-BCC2-701BDE8E26DC}";//"$$UniqueEventCharName$$";
 //"{D244D5E4-4640-4186-BCC2-701BDE8E26DC}"
-char szEventTerminationName[] = "{F3358C89-E4AD-43f4-8D20-38A038F47459}";//"$$UniqueEventTerminationName$$";
+char szSemTerminationName[] = "{F3358C89-E4AD-43f4-8D20-38A038F47459}";//"$$UniqueEventTerminationName$$";
 //"{F3358C89-E4AD-43f4-8D20-38A038F47459}"
 int main(int argc, char* argv[])
 {
@@ -21,9 +21,9 @@ int main(int argc, char* argv[])
 		hPagingFileMapping;
 
 	hEventTermination = OpenEvent(EVENT_ALL_ACCESS, FALSE,//childs do not inherit this handle.
-		szEventTerminationName);
+		szSemTerminationName);
 	if (!hEventTermination) {
-		printf("Open Event <%s>: Error %ld\n", szEventTerminationName, GetLastError());
+		printf("Open Event <%s>: Error %ld\n", szSemTerminationName, GetLastError());
 		printf("Press any key to quit...\n");
 		getch();
 		return 0;
@@ -39,9 +39,9 @@ int main(int argc, char* argv[])
 
 	///////////////////////////////	printf("PgFlServer starting ...\n");
 
-	hEventChar = OpenEvent(EVENT_ALL_ACCESS, FALSE, szEventCharName);
+	hEventChar = OpenEvent(EVENT_ALL_ACCESS, FALSE, szSemCharName);
 	if (!hEventChar) {
-		printf("Open Event <%s>: Error %ld\n", szEventCharName, GetLastError());
+		printf("Open Event <%s>: Error %ld\n", szSemCharName, GetLastError());
 		printf("Press any key to quit...\n");
 		getch();		return 0;
 	}

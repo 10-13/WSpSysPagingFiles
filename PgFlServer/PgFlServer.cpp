@@ -9,24 +9,24 @@
 char szPagingFileShareName[] = "{11FB95B0-4300-49fb-BE12-B086FD00D7B8}";//"$$UniquePagingFileShareName$$";
 //"{11FB95B0-4300-49fb-BE12-B086FD00D7B8}"
 
-char szEventCharName[] = "{D244D5E4-4640-4186-BCC2-701BDE8E26DC}";//"$$UniqueEventCharName$$";
+char szSemCharName[] = "{D244D5E4-4640-4186-BCC2-701BDE8E26DC}";//"$$UniqueEventCharName$$";
 //"{D244D5E4-4640-4186-BCC2-701BDE8E26DC}"
-char szEventTerminationName[] = "{F3358C89-E4AD-43f4-8D20-38A038F47459}";//"$$UniqueEventTerminationName$$";
+char szSemTerminationName[] = "{F3358C89-E4AD-43f4-8D20-38A038F47459}";//"$$UniqueEventTerminationName$$";
 //"{F3358C89-E4AD-43f4-8D20-38A038F47459}"
 
 int main(int argc, char* argv[])
 {
 
 
-	HANDLE	hEventChar,
-		hEventTermination,
+	HANDLE	hSemaphoreChar,
+		hSemaphoreTermination,
 		hPagingFileMapping;
 
-	hEventTermination = CreateEvent(NULL, FALSE,//auto-reset
+	hSemaphoreTermination = CreateSemaphoreA(NULL, FALSE,//auto-reset
 		FALSE,//nonsignaled
-		szEventTerminationName);
-	if (!hEventTermination) {
-		printf("Create Event <%s>: Error %ld\n", szEventTerminationName, GetLastError());
+		szSemTerminationName);
+	if (!hSemaphoreTermination) {
+		printf("Create Event <%s>: Error %ld\n", szSemTerminationName, GetLastError());
 		printf("Press any key to quit...\n");
 		getch();		return 0;
 	}
@@ -39,9 +39,9 @@ int main(int argc, char* argv[])
 
 	printf("PgFlServer starting ...\n");
 
-	hEventChar = CreateEvent(NULL, FALSE, FALSE, szEventCharName);//auto-reset,nonsignaled
-	if (!hEventChar) {
-		printf("Create Event <%s>: Error %ld\n", szEventCharName, GetLastError());
+	hSemaphoreChar = CreateSemaphoreA(NULL, FALSE, FALSE, szSemCharName);//auto-reset,nonsignaled
+	if (!hSemaphoreChar) {
+		printf("Create Event <%s>: Error %ld\n", szSemCharName, GetLastError());
 		printf("Press any key to quit...\n");
 		getch();		return 0;
 	}
@@ -70,13 +70,13 @@ int main(int argc, char* argv[])
 
 	printf("PgFlServer is ready to receive input from PgFlClient...\n");
 	//===================================================================//
-	HANDLE hEvents[] = { hEventTermination,hEventChar };
+	HANDLE hSemaphores[] = { hSemaphoreTermination,hSemaphoreChar };
 	bool bTerminate = false;
 	DWORD dwWaitRetCode;
 
 	while (!bTerminate)
 	{
-		dwWaitRetCode = WaitForMultipleObjects(2, hEvents,
+		dwWaitRetCode = WaitForMultipleObjects(2, hSemaphores,
 			FALSE,//If FALSE, the function returns 
 			//when the state of any one of the objects set to is signaled
 			INFINITE);
@@ -104,8 +104,8 @@ int main(int argc, char* argv[])
 		}//switch
 	}//while
 //-----------------------------------//
-	CloseHandle(hEventTermination);
-	CloseHandle(hEventChar);
+	CloseHandle(hSemaphoreTermination);
+	CloseHandle(hSemaphoreChar);
 
 	UnmapViewOfFile(lpFileMap);
 	CloseHandle(hPagingFileMapping);
