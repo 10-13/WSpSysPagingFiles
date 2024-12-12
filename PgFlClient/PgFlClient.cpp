@@ -9,6 +9,7 @@
 char szPagingFileShareName[] = "{11FB95B0-4300-49fb-BE12-B086FD00D7B8}";//"$$UniquePagingFileShareName$$";
 //"{11FB95B0-4300-49fb-BE12-B086FD00D7B8}"
 char szSemCharName[] = "{D244D5E4-4640-4186-BCC2-701BDE8E26DC}";//"$$UniqueEventCharName$$";
+char szSemCharName2[] = "{A244D5E4-4640-4186-BCC2-701BDE8E26DC}";//"$$UniqueEventCharName$$";
 //"{D244D5E4-4640-4186-BCC2-701BDE8E26DC}"
 char szSemTerminationName[] = "{F3358C89-E4AD-43f4-8D20-38A038F47459}";//"$$UniqueEventTerminationName$$";
 //"{F3358C89-E4AD-43f4-8D20-38A038F47459}"
@@ -17,6 +18,7 @@ int main(int argc, char* argv[])
 
 
 	HANDLE	hSemChar,
+		hSemChar2,
 		hSemTermination,
 		hPagingFileMapping;
 
@@ -39,6 +41,7 @@ int main(int argc, char* argv[])
 	///////////////////////////////	printf("PgFlServer starting ...\n");
 
 	hSemChar = OpenSemaphoreA(EVENT_ALL_ACCESS, FALSE, szSemCharName);
+	hSemChar2 = OpenSemaphoreA(EVENT_ALL_ACCESS, FALSE, szSemCharName2);
 	if (!hSemChar) {
 		printf("Open Event <%s>: Error %ld\n", szSemCharName, GetLastError());
 		printf("Press any key to quit...\n");
@@ -108,8 +111,8 @@ int main(int argc, char* argv[])
 
 		memcpy(((LPSTR)lpFileMap), msg, 100);
 		ReleaseSemaphore(hSemChar, 1, NULL);
-
-		WaitForSingleObject(hSemChar, INFINITE);
+		SwitchToThread();
+		WaitForSingleObject(hSemChar2, INFINITE);
 		printf("Response: %s\n", ((LPSTR)lpFileMap));
 	}
 	//-----------------------------------//

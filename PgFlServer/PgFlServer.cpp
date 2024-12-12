@@ -10,6 +10,7 @@ char szPagingFileShareName[] = "{11FB95B0-4300-49fb-BE12-B086FD00D7B8}";//"$$Uni
 //"{11FB95B0-4300-49fb-BE12-B086FD00D7B8}"
 
 char szSemCharName[] = "{D244D5E4-4640-4186-BCC2-701BDE8E26DC}";//"$$UniqueEventCharName$$";
+char szSemCharName2[] = "{A244D5E4-4640-4186-BCC2-701BDE8E26DC}";//"$$UniqueEventCharName$$";
 //"{D244D5E4-4640-4186-BCC2-701BDE8E26DC}"
 char szSemTerminationName[] = "{F3358C89-E4AD-43f4-8D20-38A038F47459}";//"$$UniqueEventTerminationName$$";
 //"{F3358C89-E4AD-43f4-8D20-38A038F47459}"
@@ -19,6 +20,7 @@ int main(int argc, char* argv[])
 
 
 	HANDLE	hSemaphoreChar,
+		hSemChar2,
 		hSemaphoreTermination,
 		hPagingFileMapping;
 
@@ -38,6 +40,7 @@ int main(int argc, char* argv[])
 	printf("PgFlServer starting ...\n");
 
 	hSemaphoreChar = CreateSemaphoreA(NULL, 0, 1, szSemCharName);//auto-reset,nonsignaled
+	hSemChar2 = CreateSemaphoreA(NULL, 1, 1, szSemCharName2);
 	if (!hSemaphoreChar) {
 		printf("Create Event <%s>: Error %ld\n", szSemCharName, GetLastError());
 		printf("Press any key to quit...\n");
@@ -83,25 +86,25 @@ int main(int argc, char* argv[])
 		case WAIT_FAILED:
 			bTerminate = true;
 			printf("PgFlServer terminated by WAIT_FAILED: Error %ld\n", GetLastError());
-			continue;
+			break;
 
 		case WAIT_OBJECT_0:    //either hEvents[0] or both hEvents[0] and hEvents[1]
 			bTerminate = true;
 			printf("PgFlServer terminated by hEventTermination: GetLastError()= %ld\n", GetLastError());
-			continue;
+			break;
 
 		case WAIT_OBJECT_0 + 1: //only one hEvents[1] is signaled
 
-			printf("%s\n", ((LPSTR)lpFileMap));
-			strrev(((LPSTR)lpFileMap));
-			continue;
+			printf("%s", ((LPSTR)lpFileMap));
+			memcpy(((LPSTR)lpFileMap), strrev(((LPSTR)lpFileMap)), 80);
+			break;
 
 		default://if it is possible
 			bTerminate = true;
 			printf("PgFlServer terminated <default>: GetLastError() %ld\n", GetLastError());
-			continue;
+			break;
 		}//switch
-		ReleaseSemaphore(hSemaphoreChar, 1, NULL);
+		ReleaseSemaphore(hSemChar2, 1, NULL);
 	}//while
 //-----------------------------------//
 	CloseHandle(hSemaphoreTermination);
