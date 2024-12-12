@@ -22,9 +22,7 @@ int main(int argc, char* argv[])
 		hSemaphoreTermination,
 		hPagingFileMapping;
 
-	hSemaphoreTermination = CreateSemaphoreA(NULL, FALSE,//auto-reset
-		FALSE,//nonsignaled
-		szSemTerminationName);
+	hSemaphoreTermination = CreateSemaphoreA(NULL, 1, 1, szSemTerminationName);
 	if (!hSemaphoreTermination) {
 		printf("Create Event <%s>: Error %ld\n", szSemTerminationName, GetLastError());
 		printf("Press any key to quit...\n");
@@ -39,7 +37,7 @@ int main(int argc, char* argv[])
 
 	printf("PgFlServer starting ...\n");
 
-	hSemaphoreChar = CreateSemaphoreA(NULL, FALSE, FALSE, szSemCharName);//auto-reset,nonsignaled
+	hSemaphoreChar = CreateSemaphoreA(NULL, 1, 1, szSemCharName);//auto-reset,nonsignaled
 	if (!hSemaphoreChar) {
 		printf("Create Event <%s>: Error %ld\n", szSemCharName, GetLastError());
 		printf("Press any key to quit...\n");

@@ -16,13 +16,13 @@ int main(int argc, char* argv[])
 {
 
 
-	HANDLE	hEventChar,
-		hEventTermination,
+	HANDLE	hSemChar,
+		hSemTermination,
 		hPagingFileMapping;
 
-	hEventTermination = OpenEvent(EVENT_ALL_ACCESS, FALSE,//childs do not inherit this handle.
+	hSemTermination = OpenSemaphoreA(EVENT_ALL_ACCESS, FALSE,//childs do not inherit this handle.
 		szSemTerminationName);
-	if (!hEventTermination) {
+	if (!hSemTermination) {
 		printf("Open Event <%s>: Error %ld\n", szSemTerminationName, GetLastError());
 		printf("Press any key to quit...\n");
 		getch();
@@ -39,8 +39,8 @@ int main(int argc, char* argv[])
 
 	///////////////////////////////	printf("PgFlServer starting ...\n");
 
-	hEventChar = OpenEvent(EVENT_ALL_ACCESS, FALSE, szSemCharName);
-	if (!hEventChar) {
+	hSemChar = OpenSemaphoreA(EVENT_ALL_ACCESS, FALSE, szSemCharName);
+	if (!hSemChar) {
 		printf("Open Event <%s>: Error %ld\n", szSemCharName, GetLastError());
 		printf("Press any key to quit...\n");
 		getch();		return 0;
@@ -82,10 +82,10 @@ int main(int argc, char* argv[])
 		MessageBox(0, message, szTitle, MB_OK | MB_ICONEXCLAMATION);
 
 
-		SetEvent(hEventTermination);
+		SetEvent(hSemTermination);
 
-		CloseHandle(hEventTermination);
-		CloseHandle(hEventChar);
+		CloseHandle(hSemTermination);
+		CloseHandle(hSemChar);
 
 		UnmapViewOfFile(lpFileMap);
 		CloseHandle(hPagingFileMapping);
@@ -101,16 +101,16 @@ int main(int argc, char* argv[])
 	{
 		achar = getche();
 		if (achar == 27) {
-			SetEvent(hEventTermination);
+			ReleaseSemaphore(hSemTermination, 1, NULL);
 			bTerminate = true;
 		}
 
 		*((LPSTR)lpFileMap) = achar;
-		SetEvent(hEventChar);
+		ReleaseSemaphore(hSemTermination, 1, NULL);
 	}
 	//-----------------------------------//
-	CloseHandle(hEventTermination);
-	CloseHandle(hEventChar);
+	CloseHandle(hSemTermination);
+	CloseHandle(hSemChar);
 
 	UnmapViewOfFile(lpFileMap);
 	CloseHandle(hPagingFileMapping);
