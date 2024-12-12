@@ -95,16 +95,18 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 	bool bTerminate = false;
-	char achar;
+	char msg[100];
+	for (int i = 0; i < 100; i++)
+		msg[i] = 0;
 	while (!bTerminate)
 	{
-		achar = getche();
-		if (achar == 27) {
+		scanf("%s", msg);
+		if (strcmp(msg, "shutdown") == 0) {
 			ReleaseSemaphore(hSemTermination, 1, NULL);
 			bTerminate = true;
 		}
 
-		*((LPSTR)lpFileMap) = achar;
+		memcpy(((LPSTR)lpFileMap), msg, 100);
 		ReleaseSemaphore(hSemChar, 1, NULL);
 	}
 	//-----------------------------------//

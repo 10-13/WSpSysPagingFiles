@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
 
 		case WAIT_OBJECT_0 + 1: //only one hEvents[1] is signaled
 
-			putch(*((LPSTR)lpFileMap));
+			printf("%s\n", ((LPSTR)lpFileMap));
 			continue;
 
 		default://if it is possible
