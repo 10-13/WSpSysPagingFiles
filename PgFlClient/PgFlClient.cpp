@@ -108,6 +108,9 @@ int main(int argc, char* argv[])
 
 		memcpy(((LPSTR)lpFileMap), msg, 100);
 		ReleaseSemaphore(hSemChar, 1, NULL);
+
+		WaitForSingleObject(hSemChar, INFINITE);
+		printf("Response: %s\n", ((LPSTR)lpFileMap));
 	}
 	//-----------------------------------//
 	CloseHandle(hSemTermination);

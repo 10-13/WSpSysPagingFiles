@@ -93,6 +93,7 @@ int main(int argc, char* argv[])
 		case WAIT_OBJECT_0 + 1: //only one hEvents[1] is signaled
 
 			printf("%s\n", ((LPSTR)lpFileMap));
+			strrev(((LPSTR)lpFileMap));
 			continue;
 
 		default://if it is possible
@@ -100,6 +101,7 @@ int main(int argc, char* argv[])
 			printf("PgFlServer terminated <default>: GetLastError() %ld\n", GetLastError());
 			continue;
 		}//switch
+		ReleaseSemaphore(hSemaphoreChar, 1, NULL);
 	}//while
 //-----------------------------------//
 	CloseHandle(hSemaphoreTermination);
