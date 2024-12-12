@@ -20,8 +20,7 @@ int main(int argc, char* argv[])
 		hSemTermination,
 		hPagingFileMapping;
 
-	hSemTermination = OpenSemaphoreA(EVENT_ALL_ACCESS, FALSE,//childs do not inherit this handle.
-		szSemTerminationName);
+	hSemTermination = OpenSemaphoreA(EVENT_ALL_ACCESS, FALSE, szSemTerminationName);
 	if (!hSemTermination) {
 		printf("Open Event <%s>: Error %ld\n", szSemTerminationName, GetLastError());
 		printf("Press any key to quit...\n");
