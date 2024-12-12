@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
 		hSemaphoreTermination,
 		hPagingFileMapping;
 
-	hSemaphoreTermination = CreateSemaphoreA(NULL, 1, 1, szSemTerminationName);
+	hSemaphoreTermination = CreateSemaphoreA(NULL, 0, 1, szSemTerminationName);
 	if (!hSemaphoreTermination) {
 		printf("Create Event <%s>: Error %ld\n", szSemTerminationName, GetLastError());
 		printf("Press any key to quit...\n");
@@ -37,13 +37,13 @@ int main(int argc, char* argv[])
 
 	printf("PgFlServer starting ...\n");
 
-	hSemaphoreChar = CreateSemaphoreA(NULL, 1, 1, szSemCharName);//auto-reset,nonsignaled
+	hSemaphoreChar = CreateSemaphoreA(NULL, 0, 1, szSemCharName);//auto-reset,nonsignaled
 	if (!hSemaphoreChar) {
 		printf("Create Event <%s>: Error %ld\n", szSemCharName, GetLastError());
 		printf("Press any key to quit...\n");
 		getch();		return 0;
 	}
-	hPagingFileMapping = CreateFileMapping((HANDLE)-1,//== INVALID_HANDLE_VALUE
+	hPagingFileMapping = CreateFileMappingA((HANDLE)-1,//== INVALID_HANDLE_VALUE
 		NULL,
 		PAGE_READWRITE,
 		0, 200, szPagingFileShareName);

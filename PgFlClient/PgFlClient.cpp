@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
 		}
 
 		*((LPSTR)lpFileMap) = achar;
-		ReleaseSemaphore(hSemTermination, 1, NULL);
+		ReleaseSemaphore(hSemChar, 1, NULL);
 	}
 	//-----------------------------------//
 	CloseHandle(hSemTermination);
