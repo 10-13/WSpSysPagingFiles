@@ -95,8 +95,18 @@ int main(int argc, char* argv[])
 
 		case WAIT_OBJECT_0 + 1: //only one hEvents[1] is signaled
 
+			{
+				LPSTR strrev = (LPSTR)lpFileMap;
+				size_t size = strlen(strrev);
+				for (size_t i = 0; i < size / 2; i++) {
+					char k = strrev[i];
+					strrev[i] = strrev[size - i - 1];
+					strrev[size - i - 1] = k;
+				}
+			
+			lpFileMap = (LPVOID)strrev;
 			printf("%s", ((LPSTR)lpFileMap));
-			memcpy(((LPSTR)lpFileMap), strrev(((LPSTR)lpFileMap)), 80);
+			}
 			break;
 
 		default://if it is possible

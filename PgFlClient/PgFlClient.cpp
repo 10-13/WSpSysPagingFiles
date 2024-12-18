@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
 		printf("Press any key to quit...\n");
 		getch();		return 0;
 	}
-	hPagingFileMapping = OpenFileMapping(FILE_MAP_READ | FILE_MAP_WRITE, FALSE, //the handle cannot be inherited.
+	hPagingFileMapping = OpenFileMappingA(FILE_MAP_READ | FILE_MAP_WRITE, FALSE, //the handle cannot be inherited.
 		szPagingFileShareName);
 	if (!hPagingFileMapping) {
 		printf("Open File Mapping <%s>: Error %ld\n", szPagingFileShareName, GetLastError());
